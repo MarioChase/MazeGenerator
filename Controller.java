@@ -54,7 +54,7 @@ public class Controller extends Application {
 		int y = 20;
 		maze.get(getCoordinate(x, y)).setFill(Color.WHITE);
 
-		for (int i = 0; i < 50; i += 2) {
+		for (int i = 0; i < 500; i += 2) {
 			int x_modifier = 0;
 			int y_modifier = 0;
 			switch (rand.nextInt(3)) {
@@ -65,7 +65,7 @@ public class Controller extends Application {
 					x = moveLeft(x);
 					break;
 				} else {
-					maze = generateMaze(maze);
+
 				}
 			case 1:
 				if (isValid(maze.get(getCoordinate(moveRight(x), y))) == true) {
@@ -74,7 +74,7 @@ public class Controller extends Application {
 					x = moveRight(x);
 					break;
 				} else {
-					maze = generateMaze(maze);
+
 				}
 			case 2:
 				if (isValid(maze.get(getCoordinate(x, moveUp(y)))) == true) {
@@ -83,7 +83,6 @@ public class Controller extends Application {
 					y = moveUp(y);
 					break;
 				} else {
-					maze = generateMaze(maze);
 				}
 			case 3:
 				if (isValid(maze.get(getCoordinate(x, moveDown(y)))) == true) {
@@ -93,8 +92,9 @@ public class Controller extends Application {
 					break;
 
 				} else {
-					maze = generateMaze(maze);
 				}
+			default:
+				
 			}
 			maze.get(getCoordinate(x + x_modifier, y + y_modifier)).setFill(Color.WHITE);
 			maze.get(getCoordinate(x, y)).setFill(Color.WHITE);
