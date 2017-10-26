@@ -10,8 +10,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Controller extends Application {
-	public int width = 300;
-	public int height = 300;
+	public int width = 250;
+	public int height = 250;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -27,15 +27,15 @@ public class Controller extends Application {
 	private ArrayList<Point> generatePoints(View canvas, int num_of_points) {
 		ArrayList<Point> randomPoints = new ArrayList<Point>();
 		Random rand = new Random();
-		int x_range = canvas.screenSize.width;
-		int y_range = canvas.screenSize.height;
+		int x_range = width;
+		int y_range = height;
 		for (int i = 0; i < num_of_points; i++) {
 			randomPoints.add(new Point(i, rand.nextInt(x_range), rand.nextInt(y_range)));
 		}
 		return randomPoints;
 	}
-	
-	//Separate this algorithm into a separate object
+
+	// Separate this algorithm into a separate object
 	private ArrayList<Rectangle> generateGrid() {
 		ArrayList<Rectangle> grid = new ArrayList<Rectangle>();
 		for (int i = 0; i < width; i++) {
@@ -48,17 +48,18 @@ public class Controller extends Application {
 		}
 		return grid;
 	}
-	//Separate this into algorithm
+
+	// Separate this into algorithm
 	private ArrayList<Rectangle> generateMaze(ArrayList<Rectangle> grid) {
 		ArrayList<Rectangle> maze = grid;
-		Stack<String> directions = new Stack<String>(); 
+		Stack<String> directions = new Stack<String>();
 		Random rand = new Random();
 		int x = 2;
 		int y = 2;
-		
+
 		maze.get(getCoordinate(x, y)).setFill(Color.GREEN);
 
-		for (int i = 0; i < (width/2 * height/2) + 750; i += 2) {
+		for (int i = 0; i < (width * height); i++) {
 			int x_modifier = 0;
 			int y_modifier = 0;
 			switch (rand.nextInt(3)) {
@@ -90,27 +91,33 @@ public class Controller extends Application {
 					directions.push("Down");
 					break;
 
-				} 
-			default:
-				switch(directions.peek()) {
-				case "Left":
-					x_modifier = 1;
-					x = moveRight(x);
-					break;
-				case "Right":
-					x_modifier = -1;
-					x = moveLeft(x);
-					break;
-				case "Up":
-					y_modifier = -1;
-					y = moveDown(y);
-					break;
-				case "Down":
-					y_modifier = 1;
-					y = moveUp(y);
-					break;
 				}
-				directions.pop();
+			default:
+				if (directions.isEmpty() == false) {
+					switch (directions.peek()) {
+					case "Left":
+						x_modifier = 1;
+						x = moveRight(x);
+						directions.pop();
+						break;
+					case "Right":
+						x_modifier = -1;
+						x = moveLeft(x);
+						directions.pop();
+						break;
+					case "Up":
+						y_modifier = -1;
+						y = moveDown(y);
+						directions.pop();
+						break;
+					case "Down":
+						y_modifier = 1;
+						y = moveUp(y);
+						directions.pop();
+						break;
+
+					}
+				}
 			}
 			maze.get(getCoordinate(x + x_modifier, y + y_modifier)).setFill(Color.WHITE);
 			maze.get(getCoordinate(x, y)).setFill(Color.WHITE);
@@ -128,7 +135,7 @@ public class Controller extends Application {
 	}
 
 	private int moveDown(int num) {
-		if (num <= height/2) {
+		if (num <= height / 2) {
 			return num + 2;
 		}
 		return num;
@@ -149,7 +156,7 @@ public class Controller extends Application {
 	}
 
 	private int moveLeft(int num) {
-		if (num <= width/2) {
+		if (num <= width / 2) {
 			return num + 2;
 		}
 		return num;
