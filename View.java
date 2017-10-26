@@ -39,13 +39,4 @@ public class View {
 			gc.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 		}
 	}
-
-	public void drawPoint(Point draw_point) throws InterruptedException {
-		gc.strokeOval(draw_point.getX(), draw_point.getY(), draw_point.getRadius(), draw_point.getRadius());
-	}
-
-	public void connectPoint(Point a, Point b) {
-		gc.setLineWidth(5);
-		gc.strokeLine(a.getX(), a.getY(), b.getX(), b.getY());
-	}
 }
