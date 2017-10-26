@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Stack;
 
 import javafx.*;
 import javafx.application.Application;
@@ -9,8 +10,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Controller extends Application {
-	public int width = 700;
-	public int height = 700;
+	public int width = 300;
+	public int height = 300;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -33,7 +34,8 @@ public class Controller extends Application {
 		}
 		return randomPoints;
 	}
-
+	
+	//Separate this algorithm into a separate object
 	private ArrayList<Rectangle> generateGrid() {
 		ArrayList<Rectangle> grid = new ArrayList<Rectangle>();
 		for (int i = 0; i < width; i++) {
@@ -46,55 +48,69 @@ public class Controller extends Application {
 		}
 		return grid;
 	}
-
+	//Separate this into algorithm
 	private ArrayList<Rectangle> generateMaze(ArrayList<Rectangle> grid) {
 		ArrayList<Rectangle> maze = grid;
+		Stack<String> directions = new Stack<String>(); 
 		Random rand = new Random();
-		int x = 20;
-		int y = 20;
-		maze.get(getCoordinate(x, y)).setFill(Color.WHITE);
+		int x = 2;
+		int y = 2;
+		
+		maze.get(getCoordinate(x, y)).setFill(Color.GREEN);
 
-		for (int i = 0; i < 500; i += 2) {
+		for (int i = 0; i < (width/2 * height/2) + 750; i += 2) {
 			int x_modifier = 0;
 			int y_modifier = 0;
 			switch (rand.nextInt(3)) {
 			case 0:
 				if (isValid(maze.get(getCoordinate(moveLeft(x), y))) == true) {
-					System.out.println("Left");
 					x_modifier = -1;
 					x = moveLeft(x);
+					directions.push("Left");
 					break;
-				} else {
-
 				}
 			case 1:
 				if (isValid(maze.get(getCoordinate(moveRight(x), y))) == true) {
-					System.out.println("Right");
 					x_modifier = 1;
 					x = moveRight(x);
+					directions.push("Right");
 					break;
-				} else {
-
 				}
 			case 2:
 				if (isValid(maze.get(getCoordinate(x, moveUp(y)))) == true) {
-					System.out.println("Up");
 					y_modifier = 1;
 					y = moveUp(y);
+					directions.push("Up");
 					break;
-				} else {
 				}
 			case 3:
 				if (isValid(maze.get(getCoordinate(x, moveDown(y)))) == true) {
-					System.out.println("Down");
+					y_modifier = -1;
+					y = moveDown(y);
+					directions.push("Down");
+					break;
+
+				} 
+			default:
+				switch(directions.peek()) {
+				case "Left":
+					x_modifier = 1;
+					x = moveRight(x);
+					break;
+				case "Right":
+					x_modifier = -1;
+					x = moveLeft(x);
+					break;
+				case "Up":
 					y_modifier = -1;
 					y = moveDown(y);
 					break;
-
-				} else {
+				case "Down":
+					y_modifier = 1;
+					y = moveUp(y);
+					break;
 				}
-			default:
-				
+				directions.pop();
 			}
 			maze.get(getCoordinate(x + x_modifier, y + y_modifier)).setFill(Color.WHITE);
 			maze.get(getCoordinate(x, y)).setFill(Color.WHITE);
@@ -112,7 +128,7 @@ public class Controller extends Application {
 	}
 
 	private int moveDown(int num) {
-		if (num <= height) {
+		if (num <= height/2) {
 			return num + 2;
 		}
 		return num;
@@ -133,7 +149,7 @@ public class Controller extends Application {
 	}
 
 	private int moveLeft(int num) {
-		if (num <= height) {
+		if (num <= width/2) {
 			return num + 2;
 		}
 		return num;
